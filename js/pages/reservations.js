@@ -329,6 +329,70 @@ export function initReservations() {
 
     // --- Botón pago con cripto ---
     const btnCrypto = document.getElementById('btn-crypto');
+if (btnCrypto) {
+    btnCrypto.addEventListener('click', async () => {
+        const cart = getCart();
+        if (cart.length === 0) {
+            showFormMessage('Tu carrito está vacío.', 'error');
+            return;
+        }
+
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+
+        if (!nombre || !email) {
+            showFormMessage('Por favor completá tu nombre y email antes de pagar.', 'error');
+            return;
+        }
+
+        btnCrypto.textContent = 'Procesando...';
+        btnCrypto.disabled = true;
+
+        try {
+            const firstItem = cart[0];
+            const wineryName = WINERIES_DATA[firstItem.bodega]?.name || firstItem.bodega;
+            const meta = (EXPERIENCE_METADATA[firstItem.bodega] && EXPERIENCE_METADATA[firstItem.bodega][firstItem.experiencia]) || { price: 15 };
+            const formatHora = firstItem.hora?.length === 5 ? firstItem.hora + ':00' : firstItem.hora;
+
+            // 1. Guardar reserva Y mandar email
+            await fetch(`${API_BASE_URL}/reservas/confirmar-cripto`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nombre,
+                    email,
+                    bodega: wineryName,
+                    fecha: firstItem.fecha,
+                    hora: formatHora,
+                    invitados: parseInt(firstItem.invitados, 10) || 1,
+                    precio: meta.price * (parseInt(firstItem.invitados, 10) || 1)
+                })
+            });
+
+            // 2. Obtener link de pago cripto
+            const response = await fetch(`${API_BASE_URL}/pagos/cripto`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bodega: wineryName, nombre })
+            });
+
+            const data = await response.json();
+
+            if (data.payment_url) {
+                clearCart();
+                window.location.href = data.payment_url;
+            } else {
+                showFormMessage('Error al generar el pago. Intente de nuevo.', 'error');
+                btnCrypto.textContent = '₿ Pagar con Criptomoneda';
+                btnCrypto.disabled = false;
+            }
+        } catch (err) {
+            showFormMessage('No se pudo conectar con el servidor.', 'error');
+            btnCrypto.textContent = '₿ Pagar con Criptomoneda';
+            btnCrypto.disabled = false;
+        }
+    });
+}
     if (btnCrypto) {
         btnCrypto.addEventListener('click', async () => {
             const cart = getCart();

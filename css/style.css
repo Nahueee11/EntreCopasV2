@@ -1744,7 +1744,33 @@ label {
   color: #0d47a1;
 }
 
+#btn-crypto:hover {
+    background-color: #f7931a !important;
+    color: white !important;
+}
 
-
-
-
+.btn-mp:hover {
+    background-color: #009ee3 !important;
+    color: white !important;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-box {
+    background: rgba(255,255,255,0.97);
+    padding: 32px;
+    max-width: 380px;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}

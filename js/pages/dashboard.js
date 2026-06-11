@@ -90,6 +90,13 @@ export function renderReservations() {
 }
 
 export function initDashboard() {
+    // Abrir tab desde URL
+const urlParams = new URLSearchParams(window.location.search);
+const tabParam = urlParams.get('tab');
+if (tabParam && dashboardMenu) {
+    const targetTab = dashboardMenu.querySelector(`a[data-tab="${tabParam}"]`);
+    if (targetTab) targetTab.click();
+}
     const dashboardMenu = document.getElementById('dashboard-menu');
     
     // Si no estamos en la página del panel, no hacer nada
@@ -148,6 +155,12 @@ export function initDashboard() {
             if (updated) {
                 localStorage.setItem('entreCopasReservations', JSON.stringify(reservations));
                 renderReservations(); // Re-render lists to show 'Confirmada'
+                const urlParams = new URLSearchParams(window.location.search);
+const tabParam = urlParams.get('tab');
+if (tabParam && dashboardMenu) {
+    const targetTab = dashboardMenu.querySelector(`a[data-tab="${tabParam}"]`);
+    if (targetTab) targetTab.click();
+}
             }
 
         } else if (status === 'failure') {
@@ -224,4 +237,29 @@ export function initDashboard() {
             renderFavoritesInPanel();
         }
     });
+
+    // Mostrar datos del usuario logueado
+const user = JSON.parse(localStorage.getItem('entreCopasUser') || '{}');
+if (user && user.nombre) {
+    // Nombre en el saludo
+    const welcomeEl = document.querySelector('.user-info h2');
+    if (welcomeEl) {
+        const lang = localStorage.getItem('entreCopasLanguage') || 'es';
+        const prefix = (TRANSLATIONS[lang] && TRANSLATIONS[lang]['panel-welcome-prefix']) || 'Bienvenido,';
+        welcomeEl.textContent = `${prefix} ${user.nombre}`;
+    }
+
+    // Avatar con iniciales
+    const avatarEl = document.querySelector('.avatar');
+    if (avatarEl) {
+        const initials = (user.nombre[0] || '') + (user.apellido ? user.apellido[0] : '');
+        avatarEl.textContent = initials.toUpperCase();
+    }
+
+    // Datos en el perfil
+    const nameEl = document.querySelector('#tab-content-perfil p:nth-child(1)');
+    const emailEl = document.querySelector('#tab-content-perfil p:nth-child(2)');
+    if (nameEl) nameEl.innerHTML = `<strong>Nombre:</strong> ${user.nombre} ${user.apellido || ''}`;
+    if (emailEl) emailEl.innerHTML = `<strong>Email:</strong> ${user.email}`;
+}
 }
