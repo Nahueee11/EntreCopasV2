@@ -238,13 +238,18 @@ export function initReservations() {
         // Perform parallel fetch requests to the backend for each experience in the cart
         const promises = cart.map(async (item, index) => {
             const wineryName = WINERIES_DATA[item.bodega]?.name || item.bodega;
+            const meta = (EXPERIENCE_METADATA[item.bodega] && EXPERIENCE_METADATA[item.bodega][item.experiencia]) || { price: 15 };
+            const itemPrecio = meta.price * (parseInt(item.invitados, 10) || 1);
+            const formatHora = item.hora.length === 5 ? item.hora + ':00' : item.hora;
+
             const payload = {
                 nombre: nombre,
                 email: email,
                 bodega: wineryName,
                 fecha: item.fecha,
-                hora: item.hora,
-                invitados: parseInt(item.invitados, 10) || 1
+                hora: formatHora,
+                invitados: parseInt(item.invitados, 10) || 1,
+                precio: itemPrecio
             };
 
             const resp = await fetch(`${API_BASE_URL}/reservas`, {
@@ -261,7 +266,7 @@ export function initReservations() {
             if (resp.ok) {
                 // Keep local copy for user dashboard
                 const localRes = {
-                    id: respBody && respBody.id ? respBody.id : Date.now().toString(36) + '-' + index,
+                    id: respBody && respBody.reserva && respBody.reserva.id ? respBody.reserva.id : (respBody && respBody.id ? respBody.id : Date.now().toString(36) + '-' + index),
                     nombre: payload.nombre,
                     email: payload.email,
                     bodega: payload.bodega,
@@ -270,13 +275,14 @@ export function initReservations() {
                     fecha: payload.fecha,
                     hora: payload.hora,
                     invitados: payload.invitados,
-                    status: (respBody && respBody.status) ? respBody.status : 'Pendiente'
+                    precio: payload.precio,
+                    status: (respBody && respBody.reserva && respBody.reserva.status) ? respBody.reserva.status : ((respBody && respBody.status) ? respBody.status : 'Pendiente')
                 };
 
                 let reservations = JSON.parse(localStorage.getItem('entreCopasReservations') || '[]');
                 reservations.push(localRes);
                 localStorage.setItem('entreCopasReservations', JSON.stringify(reservations));
-                return { success: true };
+                return { success: true, initPoint: respBody && respBody.initPoint };
             } else {
                 return { success: false, message: respBody?.message };
             }
@@ -287,14 +293,24 @@ export function initReservations() {
             const allSuccessful = results.every(res => res.success);
 
             if (allSuccessful) {
+                // Get the last valid initPoint link to redirect the user
+                const lastResultWithInitPoint = [...results].reverse().find(res => res.initPoint);
+                const initPoint = lastResultWithInitPoint ? lastResultWithInitPoint.initPoint : null;
+
                 const successMsg = TRANSLATIONS[lang]?.['cart-success-msg'] || '¡Reservas solicitadas con éxito!';
                 showFormMessage(successMsg, 'success');
                 
                 clearCart();
                 
-                setTimeout(() => {
-                    window.location.href = 'panel.html';
-                }, 2000);
+                if (initPoint) {
+                    setTimeout(() => {
+                        window.location.href = initPoint;
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        window.location.href = 'panel.html';
+                    }, 2000);
+                }
             } else {
                 const defaultError = TRANSLATIONS[lang]?.['res-error-msg'] || 'Error al enviar la reserva. Intente de nuevo.';
                 showFormMessage(defaultError, 'error');

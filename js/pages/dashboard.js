@@ -97,11 +97,91 @@ export function initDashboard() {
 
     // Render inicial de reservas
     renderReservations();
+
+    // Comprobar estado de pago desde Mercado Pago
+    checkPaymentStatus();
     
     // Render inicial de favoritas si esa es la sección que está activa
     const activeTab = dashboardMenu ? dashboardMenu.querySelector('a.active') : null;
     if (activeTab && activeTab.getAttribute('data-tab') === 'favoritas') {
         renderFavoritesInPanel();
+    }
+
+    function checkPaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        if (!status) return;
+
+        const lang = localStorage.getItem('entreCopasLanguage') || 'es';
+        
+        // Setup toast container if it doesn't exist
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container';
+            document.body.appendChild(toastContainer);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+
+        let msg = '';
+        if (status === 'success') {
+            toast.classList.add('toast-success');
+            msg = {
+                es: '¡Pago completado con éxito! Sus reservas han sido confirmadas.',
+                en: 'Payment completed successfully! Your bookings have been confirmed.',
+                pt: 'Pagamento concluído com sucesso! Suas reservas foram confirmadas.'
+            }[lang] || '¡Pago completado con éxito!';
+
+            // Update local reservations status from 'Pendiente' to 'Confirmada'
+            let reservations = JSON.parse(localStorage.getItem('entreCopasReservations') || '[]');
+            let updated = false;
+            reservations = reservations.map(res => {
+                if (res.status === 'Pendiente') {
+                    res.status = 'Confirmada';
+                    updated = true;
+                }
+                return res;
+            });
+            if (updated) {
+                localStorage.setItem('entreCopasReservations', JSON.stringify(reservations));
+                renderReservations(); // Re-render lists to show 'Confirmada'
+            }
+
+        } else if (status === 'failure') {
+            toast.classList.add('toast-error');
+            msg = {
+                es: 'El pago fue cancelado o rechazado. Sus reservas permanecen pendientes.',
+                en: 'Payment was cancelled or rejected. Your bookings remain pending.',
+                pt: 'O pagamento foi cancelado ou rejeitado. Suas reservas continuam pendentes.'
+            }[lang] || 'El pago fue cancelado o rechazado.';
+        } else if (status === 'pending') {
+            toast.classList.add('toast-info');
+            msg = {
+                es: 'El pago está pendiente de confirmación. Sus reservas se actualizarán pronto.',
+                en: 'Payment is pending confirmation. Your bookings will be updated soon.',
+                pt: 'O pagamento está pendente de confirmação. Suas reservas serão atualizadas em breve.'
+            }[lang] || 'El pago está en proceso de confirmación.';
+        }
+
+        toast.textContent = msg;
+        toastContainer.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => toast.classList.add('show'), 100);
+
+        // Animate out after 6 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 6000);
+
+        // Clean query parameters from URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('status');
+        window.history.replaceState({}, '', newUrl);
     }
 
     if (dashboardMenu) {
