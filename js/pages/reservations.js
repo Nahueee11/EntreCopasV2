@@ -310,4 +310,55 @@ export function initReservations() {
     document.addEventListener('languageChanged', () => {
         renderCart();
     });
+
+    // --- Botón pago con cripto ---
+    const btnCrypto = document.getElementById('btn-crypto');
+    if (btnCrypto) {
+        btnCrypto.addEventListener('click', async () => {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showFormMessage('Tu carrito está vacío.', 'error');
+                return;
+            }
+
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+
+            if (!nombre || !email) {
+                showFormMessage('Por favor completá tu nombre y email antes de pagar.', 'error');
+                return;
+            }
+
+            btnCrypto.textContent = 'Procesando...';
+            btnCrypto.disabled = true;
+
+            try {
+                const firstItem = cart[0];
+                const wineryName = WINERIES_DATA[firstItem.bodega]?.name || firstItem.bodega;
+
+                const response = await fetch(`${API_BASE_URL}/pagos/cripto`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bodega: wineryName,
+                        nombre: nombre
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.payment_url) {
+                    window.location.href = data.payment_url;
+                } else {
+                    showFormMessage('Error al generar el pago. Intente de nuevo.', 'error');
+                    btnCrypto.textContent = '₿ Pagar con Criptomoneda';
+                    btnCrypto.disabled = false;
+                }
+            } catch (err) {
+                showFormMessage('No se pudo conectar con el servidor.', 'error');
+                btnCrypto.textContent = '₿ Pagar con Criptomoneda';
+                btnCrypto.disabled = false;
+            }
+        });
+    }
 }
