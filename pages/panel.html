@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="panel-title">Panel de Usuario - Entre Copas</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header id="main-header" class="scrolled">
+        <div class="logo">
+            <a href="../index.html" class="brand-link">
+                <img src="../assets/logo2.0.png" alt="Logo" class="brand-logo">
+                Entre Copas
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="explorar.html" data-i18n="nav-explore">Explorar</a>
+            <a href="panel.html" data-i18n="nav-panel">Panel</a>
+            <a href="reservas.html" data-i18n="nav-reservations">Reservas</a>
+            <a href="trabaja-con-nosotros.html" data-i18n="nav-partner">Asociarse</a>
+            <a href="registro.html" class="nav-icon-link" aria-label="Registrarse">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <div class="lang-selector-container">
+                <select id="lang-select" aria-label="Cambiar idioma">
+                    <option value="es">ESP</option>
+                    <option value="en">ENG</option>
+                    <option value="pt">POR</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-content pt-header">
+        <section class="section container">
+            <div class="dashboard-header">
+                <div class="user-profile">
+                    <div class="avatar">JM</div>
+                    <div class="user-info">
+                        <h2><span data-i18n="panel-welcome-prefix">Bienvenido,</span> Julien</h2>
+                        <p data-i18n="panel-user-level">Miembro Connoisseur</p>
+                    </div>
+                </div>
+                <a href="reservas.html" class="btn btn-primary" data-i18n="panel-new-reservation">Nueva Reserva</a>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-sidebar">
+                    <nav class="dashboard-nav" id="dashboard-menu">
+                        <a href="#" class="active" data-tab="reservas" data-i18n="panel-tab-reservations">Mis
+                            Reservas</a>
+                        <a href="#" data-tab="catas" data-i18n="panel-tab-tastings">Historial de Catas</a>
+                        <a href="#" data-tab="favoritas" data-i18n="panel-tab-favorites">Bodegas Favoritas</a>
+                        <a href="#" data-tab="perfil" data-i18n="panel-tab-profile">Mi Perfil</a>
+                    </nav>
+                </div>
+
+                <div class="dashboard-main-area">
+                    <div class="dashboard-content active-tab-content" id="tab-content-reservas">
+                        <h3 data-i18n="panel-upcoming">Próximas Experiencias</h3>
+                        <div id="reservations-list" class="reservations-container">
+                            <!-- JS will populate this from localStorage -->
+                            <div class="empty-state">
+                                <p data-i18n="panel-no-reservations">No tienes reservas próximas.</p>
+                                <a href="explorar.html" class="btn btn-ghost mt-sm"
+                                    data-i18n="panel-explore-btn">Explorar Bodegas</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-content hidden" id="tab-content-favoritas">
+                        <h3 data-i18n="panel-favorites-title">Mis Bodegas Favoritas</h3>
+                        <div id="favorites-list" class="winery-grid mt-md">
+                            <!-- JS will populate this from localStorage favorites -->
+                            <div class="empty-state">
+                                <p data-i18n="panel-no-favorites">No tienes bodegas agregadas a favoritos.</p>
+                                <a href="explorar.html" class="btn btn-ghost mt-sm"
+                                    data-i18n="panel-explore-btn">Explorar Bodegas</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-content hidden" id="tab-content-catas">
+                        <h3 data-i18n="panel-tastings-title">Historial de Catas</h3>
+                        <div class="empty-state">
+                            <p data-i18n="panel-no-tastings">Aún no has participado en ninguna cata organizada.</p>
+                            <a href="explorar.html" class="btn btn-ghost mt-sm" data-i18n="panel-view-tastings-btn">Ver
+                                Catas Disponibles</a>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-content hidden" id="tab-content-perfil">
+                        <h3 data-i18n="panel-profile-title">Mi Perfil</h3>
+                        <div class="form-wrapper" style="padding: var(--space-md);">
+                            <p style="margin-bottom: var(--space-sm);"><strong
+                                    data-i18n="profile-name-label">Nombre:</strong> Julien Moreau</p>
+                            <p style="margin-bottom: var(--space-sm);"><strong
+                                    data-i18n="profile-email-label">Email:</strong> julien.moreau@sommelier.com</p>
+                            <p style="margin-bottom: var(--space-sm);"><strong
+                                    data-i18n="profile-level-label">Nivel:</strong> <span
+                                    data-i18n="panel-user-level">Miembro Connoisseur</span></p>
+                            <a href="#" class="btn btn-ghost mt-sm" onclick="showProfileEditAlert(); return false;"
+                                data-i18n="panel-edit-profile-btn">Editar Perfil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">ENTRE COPAS</div>
+            <div class="footer-links">
+                <a href="#" data-i18n="footer-heritage">Herencia</a>
+                <a href="trabaja-con-nosotros.html" data-i18n="footer-work">Trabaja con Nosotros</a>
+                <a href="#" data-i18n="footer-privacy">Privacidad</a>
+                <a href="#" data-i18n="footer-terms">Términos</a>
+                <a href="#" data-i18n="footer-concierge">Conserje</a>
+            </div>
+            <div class="copyright" data-i18n="footer-copyright">
+                © 2024 ENTRE COPAS. Viticultura y Ceremonia.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/main.js"></script>
+</body>
+
+</html>

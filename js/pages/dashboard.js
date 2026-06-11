@@ -1,0 +1,128 @@
+import { WINERIES_DATA } from '../wineries.js';
+import { TRANSLATIONS } from '../translations.js';
+import { renderFavoritesInPanel } from '../ui/favorites.js';
+
+export function renderReservations() {
+    const reservationsList = document.getElementById('reservations-list');
+    if (!reservationsList) return;
+    
+    const reservations = JSON.parse(localStorage.getItem('entreCopasReservations') || '[]');
+    const lang = localStorage.getItem('entreCopasLanguage') || 'es';
+    
+    if (reservations.length > 0) {
+        reservationsList.innerHTML = ''; // Clear empty state
+        
+        // Sort by date (newest first)
+        reservations.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        const localeMap = {
+            es: 'es-ES',
+            en: 'en-US',
+            pt: 'pt-BR'
+        };
+        const localeStr = localeMap[lang] || 'es-ES';
+        
+        const atWord = lang === 'es' ? 'a las' : lang === 'pt' ? 'às' : 'at';
+        const guestWord = lang === 'es' ? 'Invitado(s)' : lang === 'pt' ? 'Convidado(s)' : 'Guest(s)';
+        
+        const statusMap = {
+            es: { 'Pendiente': 'Pendiente', 'Confirmada': 'Confirmada' },
+            en: { 'Pendiente': 'Pending', 'Confirmada': 'Confirmed' },
+            pt: { 'Pendiente': 'Pendente', 'Confirmada': 'Confirmada' }
+        };
+
+        reservations.forEach(res => {
+            const dateObj = new Date(res.fecha);
+            const dateStr = dateObj.toLocaleDateString(localeStr, { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            let translatedWineryName = res.bodega;
+            for (const key in WINERIES_DATA) {
+                if (WINERIES_DATA[key].name === res.bodega) {
+                    translatedWineryName = (TRANSLATIONS[lang] && TRANSLATIONS[lang][`winery-${key}-name`]) || res.bodega;
+                    break;
+                }
+            }
+
+            const translatedStatus = (statusMap[lang] && statusMap[lang][res.status]) || res.status;
+
+            const cardHTML = `
+                <div class="reservation-card">
+                    <div class="res-details">
+                        <h4>${translatedWineryName}</h4>
+                        <div class="res-meta">
+                            <span>${dateStr} ${atWord} ${res.hora}</span> | <span>${res.invitados} ${guestWord}</span>
+                        </div>
+                    </div>
+                    <div class="res-status">${translatedStatus}</div>
+                </div>
+            `;
+            reservationsList.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    } else {
+        const msg = (TRANSLATIONS[lang] && TRANSLATIONS[lang]['panel-no-reservations']) || 'No tienes reservas próximas.';
+        const btnText = (TRANSLATIONS[lang] && TRANSLATIONS[lang]['panel-explore-btn']) || 'Explorar Bodegas';
+        reservationsList.innerHTML = `
+            <div class="empty-state">
+                <p data-i18n="panel-no-reservations">${msg}</p>
+                <a href="explorar.html" class="btn btn-ghost mt-sm" data-i18n="panel-explore-btn">${btnText}</a>
+            </div>
+        `;
+    }
+}
+
+export function initDashboard() {
+    const dashboardMenu = document.getElementById('dashboard-menu');
+    
+    // Si no estamos en la página del panel, no hacer nada
+    if (!dashboardMenu && !document.getElementById('reservations-list')) return;
+
+    // Render inicial de reservas
+    renderReservations();
+    
+    // Render inicial de favoritas si esa es la sección que está activa
+    const activeTab = dashboardMenu ? dashboardMenu.querySelector('a.active') : null;
+    if (activeTab && activeTab.getAttribute('data-tab') === 'favoritas') {
+        renderFavoritesInPanel();
+    }
+
+    if (dashboardMenu) {
+        const tabs = dashboardMenu.querySelectorAll('a[data-tab]');
+        const contentSections = document.querySelectorAll('.dashboard-main-area .dashboard-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Active menu link styling
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show/hide sections
+                const targetTab = tab.getAttribute('data-tab');
+                contentSections.forEach(section => {
+                    if (section.id === `tab-content-${targetTab}`) {
+                        section.classList.remove('hidden');
+                        section.classList.add('active-tab-content');
+                    } else {
+                        section.classList.add('hidden');
+                        section.classList.remove('active-tab-content');
+                    }
+                });
+                
+                // Cargar favoritas si esa pestaña fue seleccionada
+                if (targetTab === 'favoritas') {
+                    renderFavoritesInPanel();
+                }
+            });
+        });
+    }
+
+    // Escuchar cambios de idioma para actualizar el panel dinámicamente
+    document.addEventListener('languageChanged', () => {
+        renderReservations();
+        const activeTab = dashboardMenu ? dashboardMenu.querySelector('a.active') : null;
+        if (activeTab && activeTab.getAttribute('data-tab') === 'favoritas') {
+            renderFavoritesInPanel();
+        }
+    });
+}
