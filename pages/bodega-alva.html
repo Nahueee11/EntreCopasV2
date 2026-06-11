@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="winery-alva-name">Bodegas de Alva - Entre Copas</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header id="main-header" class="scrolled">
+        <div class="logo">
+            <a href="../index.html" class="brand-link">
+                <img src="../assets/logo2.0.png" alt="Logo" class="brand-logo">
+                Entre Copas
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="explorar.html" data-i18n="nav-explore">Explorar</a>
+            <a href="panel.html" data-i18n="nav-panel">Panel</a>
+            <a href="trabaja-con-nosotros.html" data-i18n="nav-partner">Asociarse</a>
+            <a href="registro.html" class="nav-icon-link" aria-label="Registrarse">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <a href="reservas.html" class="nav-icon-link cart-link" aria-label="Carrito de compras">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-badge hidden">0</span>
+            </a>
+            <div class="lang-selector-container">
+                <select id="lang-select" aria-label="Cambiar idioma">
+                    <option value="es">ESP</option>
+                    <option value="en">ENG</option>
+                    <option value="pt">POR</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-content pt-header">
+        <div class="container back-link-container">
+            <a href="explorar.html" class="btn-back" data-i18n="winery-btn-back">
+                &larr; Volver a Explorar
+            </a>
+        </div>
+
+        <section class="winery-detail-hero section mt-sm" style="background-image: url('../assets/winery.png');">
+            <div class="hero-inner">
+                <h1 data-i18n="winery-alva-name">Bodegas de Alva</h1>
+                <p data-i18n="winery-alva-subtitle">Fusión de vanguardia y tradición centenaria</p>
+            </div>
+        </section>
+
+        <section class="winery-quick-info">
+            <div class="container info-grid">
+                <div class="info-col">
+                    <span data-i18n="winery-details-location">Ubicación</span>
+                    <p data-i18n="winery-valle-label">Valle Central</p>
+                </div>
+                <div class="info-col">
+                    <span data-i18n="winery-details-specialty">Especialidad</span>
+                    <p data-i18n="winery-specialty-valle">Malbec, Cabernet Sauvignon</p>
+                </div>
+                <div class="info-col">
+                    <span data-i18n="winery-details-hours">Horario</span>
+                    <p data-i18n="winery-hours-val">10:00 a 18:00 hs</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container">
+            <div class="experience-section-header">
+                <h2 data-i18n="winery-details-title">Experiencias y Actividades</h2>
+            </div>
+            
+            <div class="experience-list">
+                <div class="experience-card">
+                    <div class="experience-image-container">
+                        <img src="../assets/tasting.png" alt="Cata" class="experience-image">
+                    </div>
+                    <div>
+                        <span class="experience-type" data-i18n="experience-type-tasting">Catas</span>
+                        <h3 data-i18n="winery-alva-tasting-name">Cata Vanguardia</h3>
+                        <p data-i18n="winery-alva-tasting-desc">Recorrido por la arquitectura moderna y cata de 4 etiquetas seleccionadas.</p>
+                    </div>
+                    <div>
+                        <div class="experience-meta">
+                            <span class="experience-duration">1.5 hs</span>
+                            <span class="experience-price">$25 USD</span>
+                        </div>
+                        <a href="reservas.html?bodega=alva&experiencia=tasting" class="btn btn-primary btn-block" data-i18n="winery-btn-book-act">Reservar Experiencia</a>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-image-container">
+                        <img src="../assets/lunch.png" alt="Almuerzo" class="experience-image">
+                    </div>
+                    <div>
+                        <span class="experience-type" data-i18n="experience-type-lunch">Almuerzo</span>
+                        <h3 data-i18n="winery-alva-lunch-name">Almuerzo de Pasos</h3>
+                        <p data-i18n="winery-alva-lunch-desc">Menú de 5 pasos maridado con nuestros vinos de terroir en el restaurante de la finca.</p>
+                    </div>
+                    <div>
+                        <div class="experience-meta">
+                            <span class="experience-duration">2.5 hs</span>
+                            <span class="experience-price">$65 USD</span>
+                        </div>
+                        <a href="reservas.html?bodega=alva&experiencia=lunch" class="btn btn-primary btn-block" data-i18n="winery-btn-book-act">Reservar Experiencia</a>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <div class="experience-image-container">
+                        <img src="../assets/sunset.png" alt="Atardecer" class="experience-image">
+                    </div>
+                    <div>
+                        <span class="experience-type" data-i18n="experience-type-sunset">Media Tarde</span>
+                        <h3 data-i18n="winery-alva-sunset-name">Atardecer en la Terrazas</h3>
+                        <p data-i18n="winery-alva-sunset-desc">Copas de vino seleccionadas acompañadas de quesos artesanales mientras cae el sol.</p>
+                    </div>
+                    <div>
+                        <div class="experience-meta">
+                            <span class="experience-duration">2.0 hs</span>
+                            <span class="experience-price">$35 USD</span>
+                        </div>
+                        <a href="reservas.html?bodega=alva&experiencia=sunset" class="btn btn-primary btn-block" data-i18n="winery-btn-book-act">Reservar Experiencia</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container" style="padding-top: 0;">
+            <div class="winery-story-layout">
+                <div class="winery-story-text">
+                    <h2 data-i18n="winery-alva-history-title">Nuestra Historia</h2>
+                    <p data-i18n="winery-alva-history-desc">Fundada a principios del siglo pasado, Bodegas de Alva ha sabido combinar los secretos de la vinicultura clásica con un diseño contemporáneo único en la región, creando un espacio de contemplación y sabor.</p>
+                </div>
+                <div class="story-quote-box">
+                    <blockquote>"La tradición no consiste en adorar las cenizas, sino en mantener el fuego encendido."</blockquote>
+                    <cite>— Eduardo de Alva, Enólogo Principal</cite>
+                </div>
+            </div>
+        </section>
+
+        <section class="winery-cta-banner">
+            <h2 data-i18n="winery-alva-name">Bodegas de Alva</h2>
+            <p data-i18n="winery-alva-desc">Una fusión de arquitectura de vanguardia y tradición centenaria en el corazón del valle.</p>
+            <a href="reservas.html?bodega=alva&experiencia=general" class="btn btn-primary" data-i18n="winery-btn-reserve">Reservar Visita</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">ENTRE COPAS</div>
+            <div class="footer-links">
+                <a href="#" data-i18n="footer-heritage">Herencia</a>
+                <a href="trabaja-con-nosotros.html" data-i18n="footer-work">Trabaja con Nosotros</a>
+                <a href="#" data-i18n="footer-privacy">Privacidad</a>
+                <a href="#" data-i18n="footer-terms">Términos</a>
+                <a href="#" data-i18n="footer-concierge">Conserje</a>
+            </div>
+            <div class="copyright" data-i18n="footer-copyright">
+                © 2026 ENTRE COPAS. Viticultura y Ceremonia.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/main.js"></script>
+</body>
+
+</html>

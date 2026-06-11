@@ -36,10 +36,29 @@ export function renderReservations() {
             const dateStr = dateObj.toLocaleDateString(localeStr, { day: 'numeric', month: 'long', year: 'numeric' });
             
             let translatedWineryName = res.bodega;
-            for (const key in WINERIES_DATA) {
-                if (WINERIES_DATA[key].name === res.bodega) {
-                    translatedWineryName = (TRANSLATIONS[lang] && TRANSLATIONS[lang][`winery-${key}-name`]) || res.bodega;
-                    break;
+            let wineryKey = res.bodegaId;
+
+            // If bodegaId is not set, try to find it from the name
+            if (!wineryKey) {
+                for (const key in WINERIES_DATA) {
+                    if (WINERIES_DATA[key].name === res.bodega) {
+                        wineryKey = key;
+                        break;
+                    }
+                }
+            }
+
+            if (wineryKey) {
+                translatedWineryName = (TRANSLATIONS[lang] && TRANSLATIONS[lang][`winery-${wineryKey}-name`]) || res.bodega;
+            }
+
+            let translatedExpName = '';
+            if (res.experiencia && wineryKey) {
+                if (res.experiencia === 'general') {
+                    translatedExpName = (TRANSLATIONS[lang] && TRANSLATIONS[lang]['experience-type-general']) || 'Visita General';
+                } else {
+                    const expKey = `winery-${wineryKey}-${res.experiencia}-name`;
+                    translatedExpName = (TRANSLATIONS[lang] && TRANSLATIONS[lang][expKey]) || res.experiencia;
                 }
             }
 
@@ -48,7 +67,7 @@ export function renderReservations() {
             const cardHTML = `
                 <div class="reservation-card">
                     <div class="res-details">
-                        <h4>${translatedWineryName}</h4>
+                        <h4>${translatedWineryName}${translatedExpName ? ` — ${translatedExpName}` : ''}</h4>
                         <div class="res-meta">
                             <span>${dateStr} ${atWord} ${res.hora}</span> | <span>${res.invitados} ${guestWord}</span>
                         </div>

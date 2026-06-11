@@ -5,6 +5,7 @@ import { initSharing } from './ui/sharing.js';
 import { initAnimations } from './ui/animations.js';
 import { initCarousel } from './ui/carousel.js';
 import { initMap } from './map.js';
+import { initCart } from './ui/cart.js';
 
 // Page-specific controllers
 import { initExplore } from './pages/explore.js';
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFavorites();
     initSharing();
     initAnimations();
+    initCart();
 
     // 2. Initialize conditional interactive UI components
     initCarousel();
