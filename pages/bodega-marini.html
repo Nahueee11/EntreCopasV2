@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="winery-marini-name">Villa Marini - Entre Copas</title>
     <link rel="stylesheet" href="../css/style.css">
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -176,6 +177,45 @@
     </footer>
 
     <script type="module" src="../js/main.js"></script>
+
+
+<div id="n8n-chat"></div>
+<script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    createChat({
+        webhookUrl: 'http://localhost:5678/webhook/5b10a946-58e7-4fd5-8341-70388b37becc/chat',
+        webhookConfig: {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        },
+        target: '#n8n-chat',
+        mode: 'window',
+        chatInputKey: 'chatInput',
+        chatSessionKey: 'sessionId',
+        loadPreviousSession: true,
+        metadata: {},
+        showWelcomeScreen: true,
+        defaultLanguage: 'es',
+        initialMessages: [
+            '¡Hola! 👋',
+            'Soy tu asistente virtual de Entre Copas. ¿En qué puedo ayudarte hoy?'
+        ],
+        i18n: {
+            es: {
+                title: 'Entre Copas',
+                subtitle: 'Tu asistente de experiencias en bodegas.',
+                footer: '',
+                getStarted: 'Nueva Conversación',
+                inputPlaceholder: 'Escribe tu pregunta aquí...',
+            },
+        },
+        enableStreaming: false,
+    });
+</script>
 </body>
 
 </html>

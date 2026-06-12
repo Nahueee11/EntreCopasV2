@@ -119,3 +119,50 @@ if (modalForm) {
         }
     });
 }
+
+// n8n Chatbot Integration
+document.addEventListener('DOMContentLoaded', () => {
+    // Inject CSS
+    const link = document.createElement('link');
+    link.href = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // Create target container
+    const chatDiv = document.createElement('div');
+    chatDiv.id = 'n8n-chat';
+    document.body.appendChild(chatDiv);
+
+    // Initialize Chat via dynamic import
+    import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js').then(({ createChat }) => {
+        createChat({
+            webhookUrl: 'http://localhost:5678/webhook/5b10a946-58e7-4fd5-8341-70388b37becc/chat',
+            webhookConfig: {
+                method: 'POST',
+                headers: {}
+            },
+            target: '#n8n-chat',
+            mode: 'window',
+            chatInputKey: 'chatInput',
+            chatSessionKey: 'sessionId',
+            loadPreviousSession: true,
+            metadata: {},
+            showWelcomeScreen: true,
+            defaultLanguage: 'es',
+            initialMessages: [
+                '¡Hola! 👋',
+                'Soy tu asistente virtual de Entre Copas. ¿En qué puedo ayudarte hoy?'
+            ],
+            i18n: {
+                es: {
+                    title: 'Entre Copas',
+                    subtitle: "Tu asistente de experiencias en bodegas.",
+                    footer: '',
+                    getStarted: 'Nueva Conversación',
+                    inputPlaceholder: 'Escribe tu pregunta aquí...',
+                },
+            },
+            enableStreaming: false,
+        });
+    });
+});
